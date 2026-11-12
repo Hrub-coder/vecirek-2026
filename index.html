@@ -45,11 +45,11 @@
     <!-- Hlavní kontejner aplikace -->
     <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
 
-        <!-- Horní akční lišta (stav připojení + sdílení) -->
+        <!-- Horní akční lišta (stav e-mailových notifikací + sdílení) -->
         <header class="flex flex-wrap items-center justify-between gap-3">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/70 border border-amber-300/20 backdrop-blur-md text-xs sm:text-sm text-amber-200/90 shadow-lg">
-                <span id="connectionDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                <span id="connectionText">Připojování k seznamu hostů...</span>
+            <div id="emailStatusBadge" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/70 border border-amber-300/20 backdrop-blur-md text-xs sm:text-sm text-amber-200/90 shadow-lg">
+                <span id="emailStatusDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span id="emailStatusText">Kontroluji nastavení e-mailu...</span>
             </div>
 
             <button id="shareBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800/90 active:scale-[0.98] border border-amber-300/30 text-amber-200 text-sm font-medium transition-all shadow-lg shadow-black/25 backdrop-blur-md cursor-pointer">
@@ -176,7 +176,7 @@
         <section id="rsvpSection" class="bg-slate-900/75 backdrop-blur-xl border border-amber-300/25 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/40">
             <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
                 <div>
-                    <h2 id="formHeading" class="text-xl sm:text-2xl font-serif font-bold text-amber-200">Potvrdit účast</h2>
+                    <h2 id="formHeading" class="text-xl sm:text-2xl font-serif font-bold text-amber-200">Potvrzení účasti</h2>
                     <p id="formSubheading" class="text-sm text-slate-400 mt-1">Dej vědět, jestli dorazíš a zda vezmeš doprovod.</p>
                 </div>
                 <button id="cancelEditRsvpBtn" type="button" class="hidden px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 border border-slate-600 transition-all cursor-pointer">
@@ -188,7 +188,7 @@
                 <!-- Jméno nebo přezdívka -->
                 <div class="space-y-2">
                     <label for="guestName" class="block text-sm font-medium text-slate-200">
-                        Tvé jméno nebo přezdívka <span class="text-amber-400">*</span>
+                        Tvé jméno / přezdívka <span class="text-amber-400">*</span>
                     </label>
                     <input type="text" id="guestName" name="guestName" required maxlength="60" placeholder="Např. Petr Novák nebo Péťa"
                         class="w-full px-4 py-3.5 rounded-2xl bg-slate-950/75 border border-slate-700/90 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25 text-white placeholder-slate-500 outline-none transition-all text-base">
@@ -211,93 +211,66 @@
                     </div>
                 </div>
 
-                <!-- Výběr počtu osob (skryje se, pokud zvolí Nedoražím) -->
+                <!-- Výběr počtu osob doprovodu (skryje se, pokud zvolí Nedoražím) -->
                 <div id="guestsCountWrapper" class="space-y-2.5 transition-all">
-                    <label for="guestsCount" class="block text-sm font-medium text-slate-200">Počet osob celkem (včetně tebe)</label>
+                    <label class="block text-sm font-medium text-slate-200">Počet osob doprovodu</label>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                        <button type="button" data-count="1" class="count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-amber-400/20 border-amber-400 text-amber-200">
-                            Jdu sám/sama (1)
+                        <button type="button" data-count="1" class="count-btn p-3 rounded-xl border text-sm font-semibold transition-all cursor-pointer bg-amber-400/20 border-amber-400 text-amber-200">
+                            +0 jen já
                         </button>
                         <button type="button" data-count="2" class="count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-amber-400/40">
-                            +1 doprovod (2)
+                            +1 doprovod
                         </button>
                         <button type="button" data-count="3" class="count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-amber-400/40">
-                            +2 doprovod (3)
+                            +2 doprovod
                         </button>
                         <button type="button" data-count="4" class="count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-amber-400/40">
-                            +3 doprovod (4)
+                            +3 doprovod
                         </button>
                     </div>
                 </div>
 
-                <!-- Volitelná poznámka / Co přinesu / Dieta -->
+                <!-- Volitelná poznámka -->
                 <div class="space-y-2">
                     <label for="guestNote" class="block text-sm font-medium text-slate-200">
-                        Co přinesu / Poznámka / Dieta <span class="text-slate-400 font-normal">(volitelné)</span>
+                        Poznámka <span class="text-slate-400 font-normal">(co přineseš, dieta, vzkaz...)</span>
                     </label>
                     <textarea id="guestNote" name="guestNote" rows="2" maxlength="200" placeholder="Např. Přinesu láhev rumu a jednohubky, přijdu kolem 20:00, bezlepková dieta..."
                         class="w-full px-4 py-3 rounded-2xl bg-slate-950/75 border border-slate-700/90 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25 text-white placeholder-slate-500 outline-none transition-all text-sm sm:text-base resize-none"></textarea>
                 </div>
 
-                <!-- Odesílací tlačítko -->
+                <!-- Odesílací tlačítko se stavem načítání -->
                 <div class="pt-1">
-                    <button id="submitRsvpBtn" type="submit" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-500 hover:brightness-110 active:scale-[0.99] text-slate-950 font-bold text-base sm:text-lg shadow-xl shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer">
-                        <span id="submitBtnText">Potvrdit odpověď</span>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <button id="submitRsvpBtn" type="submit" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-500 hover:brightness-110 active:scale-[0.99] text-slate-950 font-bold text-base sm:text-lg shadow-xl shadow-amber-500/20 transition-all flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed">
+                        <svg id="submitBtnSpinner" class="hidden w-5 h-5 animate-spin text-slate-950" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span id="submitBtnText">Odeslat odpověď</span>
+                        <svg id="submitBtnIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                         </svg>
                     </button>
                 </div>
             </form>
-        </section>
 
-        <!-- Živý přehled a seznam hostů -->
-        <section class="bg-slate-900/70 backdrop-blur-xl border border-amber-200/20 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/40 space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-xl sm:text-2xl font-serif font-bold text-white">Kdo všechno dorazí</h2>
-                    <p class="text-sm text-slate-400">Živý přehled potvrzených hostů a vzkazů</p>
+            <!-- Záložní odeslání přes mailto:, pokud by selhal automatický přenos -->
+            <div id="mailtoFallbackBox" class="hidden mt-5 p-4 sm:p-5 rounded-2xl bg-amber-950/45 border border-amber-400/40 space-y-3">
+                <div class="flex items-start gap-3">
+                    <span class="text-xl shrink-0">✉️</span>
+                    <div class="space-y-1">
+                        <h3 class="text-sm font-semibold text-amber-200">Odpověď uložena lokálně – dokonči prosím odeslání e-mailem</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            Automatické odeslání narazilo na omezení sítě nebo prohlížeče. Klikni na tlačítko níže a odešli předvyplněný e-mail pořadateli:
+                        </p>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Souhrnné statistiky -->
-            <div class="grid grid-cols-3 gap-3 sm:gap-4">
-                <div class="bg-emerald-950/45 border border-emerald-500/30 rounded-2xl p-4 text-center">
-                    <div id="statGoingCount" class="text-2xl sm:text-3xl font-bold text-emerald-300 tabular-nums">0</div>
-                    <div class="text-xs sm:text-sm font-medium text-emerald-200/80 mt-1">Dorazí osob 🎉</div>
-                </div>
-                <div class="bg-amber-950/35 border border-amber-500/30 rounded-2xl p-4 text-center">
-                    <div id="statMaybeCount" class="text-2xl sm:text-3xl font-bold text-amber-300 tabular-nums">0</div>
-                    <div class="text-xs sm:text-sm font-medium text-amber-200/80 mt-1">Možná 🤔</div>
-                </div>
-                <div class="bg-slate-950/60 border border-slate-700/70 rounded-2xl p-4 text-center">
-                    <div id="statDeclinedCount" class="text-2xl sm:text-3xl font-bold text-slate-300 tabular-nums">0</div>
-                    <div class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Omluveno 😢</div>
-                </div>
-            </div>
-
-            <!-- Filtrovací záložky -->
-            <div class="flex flex-wrap items-center gap-2 pt-1" role="tablist" aria-label="Filtrovat hosty podle účasti">
-                <button type="button" data-filter="all" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer bg-amber-400 text-slate-950 shadow-md">
-                    Všichni (<span id="filterCountAll">0</span>)
-                </button>
-                <button type="button" data-filter="going" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/70">
-                    Dorazím 🎉 (<span id="filterCountGoing">0</span>)
-                </button>
-                <button type="button" data-filter="maybe" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/70">
-                    Možná 🤔 (<span id="filterCountMaybe">0</span>)
-                </button>
-                <button type="button" data-filter="declined" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/70">
-                    Nedoražím 😢 (<span id="filterCountDeclined">0</span>)
-                </button>
-            </div>
-
-            <!-- Seznam odpovědí -->
-            <div id="guestListContainer" class="space-y-3">
-                <!-- Dynamicky generované karty hostů -->
-                <div class="text-center py-10 text-slate-400 text-sm">
-                    Načítám seznam pozvaných...
-                </div>
+                <a id="mailtoFallbackLink" href="#" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm shadow-lg transition-all">
+                    <span>Odeslat přes e-mailového klienta (mailto:)</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
             </div>
         </section>
 
@@ -380,24 +353,20 @@
     <!-- TOAST NOTIFIKACE -->
     <div id="toastContainer" class="fixed bottom-5 right-5 left-5 sm:left-auto z-50 flex flex-col items-center sm:items-end gap-2 pointer-events-none"></div>
 
-    <!-- Aplikační logika a Firebase Firestore -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- Aplikační logika, localStorage a automatické odesílání e-mailů (FormSubmit.co) -->
+    <script>
+        // ============================================================
+        // 👇 SEM NAPIŠ SVŮJ E-MAIL, NA KTERÝ CHCEŠ DOSTÁVAT ODPOVĚDI 👇
+        const ORGANIZER_EMAIL = "TVUJ_EMAIL@gmail.com";
+        // ============================================================
 
-        // ==========================================
-        // 1. INICIALIZACE STAVU A KONFIGURACE
-        // ==========================================
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        // Klíče pro ukládání dat v prohlížeči (localStorage)
+        const STORAGE_KEYS = {
+            EVENT_DETAILS: 'vecirek_2026_event_details',
+            RSVPS: 'vecirek_2026_rsvps'
+        };
 
-        let db = null;
-        let auth = null;
-        let currentUser = null;
-        let isOfflineFallback = false;
-
-        // Výchozí stav dat
+        // Stav aplikace
         let rsvps = [];
         let activeFilter = 'all';
         let selectedStatus = 'going';
@@ -412,8 +381,70 @@
             hostNote: 'Těším se na společný předvánoční večer plný dobrého pití, hudby a pohody! Dejte prosím vědět včas, ať vím, kolik občerstvení a přípitků připravit.'
         };
 
+        // Kontrola, zda je vyplněný skutečný e-mail pořadatele
+        function isOrganizerEmailConfigured() {
+            const email = (ORGANIZER_EMAIL || '').trim();
+            return email.length > 3 && email !== 'TVUJ_EMAIL@gmail.com' && email.includes('@');
+        }
+
+        // Aktualizace horního stavového štítku
+        function updateEmailStatusBadge() {
+            const badge = document.getElementById('emailStatusBadge');
+            const dot = document.getElementById('emailStatusDot');
+            const text = document.getElementById('emailStatusText');
+
+            if (isOrganizerEmailConfigured()) {
+                badge.className = 'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/75 border border-emerald-400/35 backdrop-blur-md text-xs sm:text-sm text-emerald-200 shadow-lg';
+                dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                text.textContent = 'E-mailové notifikace aktivní';
+            } else {
+                badge.className = 'inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-950/80 border border-amber-400/45 backdrop-blur-md text-xs sm:text-sm text-amber-200 shadow-lg';
+                dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+                text.textContent = 'Doplň v kódu ORGANIZER_EMAIL';
+            }
+        }
+
         // ==========================================
-        // 2. ZIMNÍ ANIMACE SNĚHU A SVĚTÝLEK (CANVAS)
+        // NAČÍTÁNÍ A UKLÁDÁNÍ DO LOCALSTORAGE
+        // ==========================================
+        function loadFromLocalStorage() {
+            try {
+                const savedDetails = localStorage.getItem(STORAGE_KEYS.EVENT_DETAILS);
+                if (savedDetails) {
+                    const parsed = JSON.parse(savedDetails);
+                    eventDetails = { ...eventDetails, ...parsed };
+                }
+
+                const savedRsvps = localStorage.getItem(STORAGE_KEYS.RSVPS);
+                if (savedRsvps) {
+                    const parsedRsvps = JSON.parse(savedRsvps);
+                    if (Array.isArray(parsedRsvps)) {
+                        rsvps = parsedRsvps;
+                    }
+                }
+            } catch (err) {
+                console.error('Chyba při čtení z localStorage:', err);
+            }
+        }
+
+        function saveEventDetailsToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEYS.EVENT_DETAILS, JSON.stringify(eventDetails));
+            } catch (err) {
+                console.error('Chyba při ukládání detailů akce:', err);
+            }
+        }
+
+        function saveRsvpsToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEYS.RSVPS, JSON.stringify(rsvps));
+            } catch (err) {
+                console.error('Chyba při ukládání seznamu hostů:', err);
+            }
+        }
+
+        // ==========================================
+        // ZIMNÍ ANIMACE SNĚHU A SVĚTÝLEK (CANVAS)
         // ==========================================
         function initSnowCanvas() {
             const canvas = document.getElementById('snowCanvas');
@@ -429,7 +460,6 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
-            // Vytvoření kombinace jemných sněhových vloček a zlatavých jisker
             const particleCount = Math.min(75, Math.floor((window.innerWidth * window.innerHeight) / 16000));
             for (let i = 0; i < particleCount; i++) {
                 const isGoldSpark = i % 4 === 0;
@@ -478,7 +508,7 @@
         }
 
         // ==========================================
-        // 3. ŽIVÝ ODPOČET DO 18. 12. 2026 V 19:00
+        // ŽIVÝ ODPOČET DO 18. 12. 2026 V 19:00
         // ==========================================
         function startCountdown() {
             const targetDate = new Date('2026-12-18T19:00:00').getTime();
@@ -528,19 +558,19 @@
         }
 
         // ==========================================
-        // 4. TOAST NOTIFIKACE A POMOCNÉ FUNKCE
+        // TOAST NOTIFIKACE A POMOCNÉ FUNKCE
         // ==========================================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
 
             const styles = {
-                success: 'bg-emerald-950/95 border-emerald-400/50 text-emerald-100',
+                success: 'bg-emerald-950/95 border-emerald-400/60 text-emerald-100',
                 gold: 'bg-slate-900/95 border-amber-400/60 text-amber-100',
-                error: 'bg-rose-950/95 border-rose-400/50 text-rose-100'
+                error: 'bg-rose-950/95 border-rose-400/60 text-rose-100'
             };
 
-            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-2xl backdrop-blur-md text-sm font-medium transition-all duration-300 translate-y-2 opacity-0 ${styles[type] || styles.gold}`;
+            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3.5 rounded-2xl border shadow-2xl backdrop-blur-md text-sm font-medium transition-all duration-300 translate-y-2 opacity-0 max-w-md ${styles[type] || styles.gold}`;
             toast.textContent = message;
 
             container.appendChild(toast);
@@ -552,10 +582,9 @@
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
-            }, 3400);
+            }, 4500);
         }
 
-        // Bezpečné escapování HTML proti XSS
         function escapeHtml(str) {
             if (!str) return '';
             return String(str)
@@ -566,7 +595,6 @@
                 .replace(/'/g, '&#039;');
         }
 
-        // Sdílení pozvánky (zkopírování URL pomocí document.execCommand('copy'))
         function handleShareInvite() {
             const shareUrl = window.location.href;
             const tempInput = document.createElement('textarea');
@@ -592,7 +620,95 @@
         }
 
         // ==========================================
-        // 5. VYKRESLOVÁNÍ UI (DETAILY AKCE A HOSTÉ)
+        // ODESLÁNÍ E-MAILU POŘADATELI (FORMSUBMIT.CO)
+        // ==========================================
+        function getStatusLabel(status) {
+            if (status === 'going') return 'Dorazím 🎉';
+            if (status === 'maybe') return 'Možná 🤔';
+            return 'Nedoražím 😢';
+        }
+
+        function buildMailtoHref(jmeno, stavText, celkovyPocetOsob, poznamka, casOdeslani) {
+            const recipient = isOrganizerEmailConfigured() ? ORGANIZER_EMAIL.trim() : '';
+            const subject = `🎉 Večírek 18. 12. – ${jmeno}: ${stavText}`;
+            const bodyLines = [
+                'Ahoj,',
+                '',
+                'posílám potvrzení účasti na předvánoční večírek (18. 12. 2026):',
+                `• Jméno hosta: ${jmeno}`,
+                `• Účast: ${stavText}`,
+                `• Počet osob celkem: ${celkovyPocetOsob}`,
+                `• Poznámka: ${poznamka || 'Bez poznámky'}`,
+                `• Čas odeslání: ${casOdeslani}`
+            ];
+            return `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+        }
+
+        async function sendEmailNotification(payload, isEdit = false) {
+            const fallbackBox = document.getElementById('mailtoFallbackBox');
+            const fallbackLink = document.getElementById('mailtoFallbackLink');
+
+            const stavText = getStatusLabel(payload.status);
+            const celkovyPocetOsob = payload.status === 'declined' ? 0 : payload.guestsCount;
+            const casOdeslani = new Date().toLocaleString('cs-CZ');
+
+            // Připravíme záložní mailto: odkaz pro každý případ
+            fallbackLink.href = buildMailtoHref(
+                payload.name,
+                stavText,
+                celkovyPocetOsob,
+                payload.note,
+                casOdeslani
+            );
+
+            // Pokud pořadatel ještě nevyplnil svůj e-mail v kódu
+            if (!isOrganizerEmailConfigured()) {
+                fallbackBox.classList.add('hidden');
+                showToast('Odpověď je uložená lokálně. Pro odesílání e-mailů doplň v kódu ORGANIZER_EMAIL.', 'gold');
+                return;
+            }
+
+            const emailBody = {
+                _subject: `${isEdit ? '✏️ Úprava – ' : ''}🎉 Večírek 18. 12. – ${payload.name}: ${stavText}`,
+                Jméno_hosta: payload.name,
+                Účast: stavText,
+                Počet_osob_celkem: celkovyPocetOsob,
+                Poznámka: payload.note || 'Bez poznámky',
+                Čas_odeslání: casOdeslani,
+                _template: 'table',
+                _captcha: 'false'
+            };
+
+            try {
+                const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(ORGANIZER_EMAIL.trim())}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(emailBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP chyba ${response.status}`);
+                }
+
+                const result = await response.json();
+                if (result && (result.success === 'true' || result.success === true)) {
+                    fallbackBox.classList.add('hidden');
+                    showToast('Díky! Tvá odpověď byla uložena a odeslána pořadateli na e-mail.', 'success');
+                } else {
+                    throw new Error(result.message || 'Odeslání e-mailu nebylo potvrzeno.');
+                }
+            } catch (err) {
+                console.error('Chyba při odesílání přes FormSubmit.co:', err);
+                fallbackBox.classList.remove('hidden');
+                showToast('Odpověď se uložila do prohlížeče, ale e-mail se nepodařilo odeslat automaticky. Použij prosím tlačítko níže.', 'error');
+            }
+        }
+
+        // ==========================================
+        // VYKRESLOVÁNÍ UI (DETAILY AKCE A HOSTÉ)
         // ==========================================
         function renderEventDetails() {
             document.getElementById('displayTime').textContent = eventDetails.timeText;
@@ -602,7 +718,6 @@
         }
 
         function renderGuestStatsAndList() {
-            // Výpočet statistik
             const goingEntries = rsvps.filter(r => r.status === 'going');
             const maybeEntries = rsvps.filter(r => r.status === 'maybe');
             const declinedEntries = rsvps.filter(r => r.status === 'declined');
@@ -620,7 +735,6 @@
             document.getElementById('filterCountMaybe').textContent = maybeEntries.length;
             document.getElementById('filterCountDeclined').textContent = declinedEntries.length;
 
-            // Filtrování a seřazení v paměti (nejnovější úpravy nahoře)
             const filtered = rsvps
                 .filter(item => activeFilter === 'all' ? true : item.status === activeFilter)
                 .sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
@@ -629,7 +743,7 @@
 
             if (filtered.length === 0) {
                 const emptyMessages = {
-                    all: 'Zatím tu nejsou žádné odpovědi. Buď první, kdo potvrdí účast! 🎉',
+                    all: 'Zatím tu nejsou žádné uložené odpovědi. Vyplň formulář výše a potvrď účast! 🎉',
                     going: 'Zatím nikdo nepotvrdil účast v této kategorii.',
                     maybe: 'Zatím tu není žádná odpověď „Možná“.',
                     declined: 'Zatím se nikdo neomluvil — skvělá zpráva!'
@@ -667,11 +781,9 @@
 
                 let companionText = '';
                 if (guest.status !== 'declined') {
-                    if (count === 1) {
-                        companionText = '1 osoba';
-                    } else {
-                        companionText = `${count} osoby (+${count - 1} doprovod)`;
-                    }
+                    companionText = count === 1
+                        ? '1 osoba (+0 jen já)'
+                        : `${count} osoby (+${count - 1} doprovod)`;
                 }
 
                 return `
@@ -700,7 +812,6 @@
                             </div>
                         </div>
 
-                        <!-- Akční tlačítka pro úpravu nebo smazání záznamu -->
                         <div class="flex items-center justify-end gap-2 shrink-0 border-t sm:border-t-0 border-slate-800/70 pt-3 sm:pt-0">
                             <button type="button" data-action="edit" data-id="${escapeHtml(guest.id)}" title="Upravit odpověď"
                                 class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-slate-300 hover:text-amber-200 transition-colors cursor-pointer">
@@ -723,7 +834,7 @@
         }
 
         // ==========================================
-        // 6. INTERAKCE FORMULÁŘE A MODÁLNÍCH OKEN
+        // INTERAKCE FORMULÁŘE A MODÁLNÍCH OKEN
         // ==========================================
         function updateStatusButtonsUI() {
             document.querySelectorAll('.status-btn').forEach(btn => {
@@ -743,7 +854,6 @@
                 }
             });
 
-            // Skrýt výběr počtu osob, pokud uživatel zvolil Nedoražím
             const guestsWrapper = document.getElementById('guestsCountWrapper');
             if (selectedStatus === 'declined') {
                 guestsWrapper.classList.add('hidden');
@@ -763,6 +873,24 @@
             });
         }
 
+        function setSubmitLoadingState(isLoading) {
+            const submitBtn = document.getElementById('submitRsvpBtn');
+            const spinner = document.getElementById('submitBtnSpinner');
+            const icon = document.getElementById('submitBtnIcon');
+            const text = document.getElementById('submitBtnText');
+
+            submitBtn.disabled = isLoading;
+            if (isLoading) {
+                spinner.classList.remove('hidden');
+                icon.classList.add('hidden');
+                text.textContent = 'Odesílám odpověď...';
+            } else {
+                spinner.classList.add('hidden');
+                icon.classList.remove('hidden');
+                text.textContent = editingRsvpId ? 'Uložit a odeslat změny' : 'Odeslat odpověď';
+            }
+        }
+
         function resetRsvpForm() {
             editingRsvpId = null;
             document.getElementById('guestName').value = '';
@@ -773,9 +901,9 @@
             updateStatusButtonsUI();
             updateCountButtonsUI();
 
-            document.getElementById('formHeading').textContent = 'Potvrdit účast';
+            document.getElementById('formHeading').textContent = 'Potvrzení účasti';
             document.getElementById('formSubheading').textContent = 'Dej vědět, jestli dorazíš a zda vezmeš doprovod.';
-            document.getElementById('submitBtnText').textContent = 'Potvrdit odpověď';
+            document.getElementById('submitBtnText').textContent = 'Odeslat odpověď';
             document.getElementById('cancelEditRsvpBtn').classList.add('hidden');
         }
 
@@ -795,102 +923,19 @@
             updateCountButtonsUI();
 
             document.getElementById('formHeading').textContent = `Úprava odpovědi: ${guest.name}`;
-            document.getElementById('formSubheading').textContent = 'Změň svou účast, počet osob nebo poznámku a ulož.';
-            document.getElementById('submitBtnText').textContent = 'Uložit změny odpovědi';
+            document.getElementById('formSubheading').textContent = 'Změň svou účast, doprovod nebo poznámku a odešli.';
+            document.getElementById('submitBtnText').textContent = 'Uložit a odeslat změny';
             document.getElementById('cancelEditRsvpBtn').classList.remove('hidden');
 
             document.getElementById('rsvpSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         // ==========================================
-        // 7. FIREBASE AUTH & FIRESTORE REALTIME SYNC
-        // ==========================================
-        async function initFirebaseAndListeners() {
-            const dot = document.getElementById('connectionDot');
-            const statusText = document.getElementById('connectionText');
-
-            if (!firebaseConfig) {
-                isOfflineFallback = true;
-                dot.className = 'w-2 h-2 rounded-full bg-amber-400';
-                statusText.textContent = 'Lokální režim (náhled)';
-                renderEventDetails();
-                renderGuestStatsAndList();
-                return;
-            }
-
-            try {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                // POVINNÉ PRAVIDLO 3: Nejprve autentizace před jakýmkoliv dotazem do Firestore
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    const cred = await signInWithCustomToken(auth, __initial_auth_token);
-                    currentUser = cred.user;
-                } else {
-                    const cred = await signInAnonymously(auth);
-                    currentUser = cred.user;
-                }
-
-                dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-                statusText.textContent = 'Živě propojeno se seznamem hostů';
-
-                // POVINNÉ PRAVIDLO 1: Striktní cesta /artifacts/{appId}/public/data/{collectionName}
-                const eventDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'event_settings', 'main');
-                onSnapshot(
-                    eventDocRef,
-                    (snapshot) => {
-                        if (snapshot.exists()) {
-                            const data = snapshot.data();
-                            eventDetails = {
-                                timeText: data.timeText || eventDetails.timeText,
-                                locationText: data.locationText || eventDetails.locationText,
-                                dressCodeText: data.dressCodeText || eventDetails.dressCodeText,
-                                hostNote: data.hostNote !== undefined ? data.hostNote : eventDetails.hostNote
-                            };
-                        }
-                        renderEventDetails();
-                    },
-                    (error) => {
-                        console.error('Chyba při načítání detailů akce:', error);
-                        renderEventDetails();
-                    }
-                );
-
-                // POVINNÉ PRAVIDLO 1 & 2: Jednoduchý dotaz na kolekci bez orderBy/where/limit
-                const rsvpsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'rsvps');
-                onSnapshot(
-                    rsvpsColRef,
-                    (snapshot) => {
-                        rsvps = snapshot.docs.map(docSnap => ({
-                            id: docSnap.id,
-                            ...docSnap.data()
-                        }));
-                        renderGuestStatsAndList();
-                    },
-                    (error) => {
-                        console.error('Chyba při načítání seznamu hostů:', error);
-                        showToast('Nepodařilo se načíst aktuální seznam hostů.', 'error');
-                    }
-                );
-            } catch (err) {
-                console.error('Chyba inicializace Firebase:', err);
-                isOfflineFallback = true;
-                dot.className = 'w-2 h-2 rounded-full bg-rose-400';
-                statusText.textContent = 'Režim bez připojení k databázi';
-                renderEventDetails();
-                renderGuestStatsAndList();
-            }
-        }
-
-        // ==========================================
-        // 8. OVLÁDACÍ PRVKY A EVENT LISTENERY
+        // OVLÁDACÍ PRVKY A EVENT LISTENERY
         // ==========================================
         function bindEvents() {
-            // Sdílet pozvánku
             document.getElementById('shareBtn').addEventListener('click', handleShareInvite);
 
-            // Výběr stavu účasti (Dorazím / Možná / Nedoražím)
             document.querySelectorAll('.status-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     selectedStatus = btn.dataset.status;
@@ -898,7 +943,6 @@
                 });
             });
 
-            // Výběr počtu osob
             document.querySelectorAll('.count-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     selectedGuestsCount = Number(btn.dataset.count);
@@ -906,17 +950,15 @@
                 });
             });
 
-            // Zrušit úpravu RSVP
             document.getElementById('cancelEditRsvpBtn').addEventListener('click', resetRsvpForm);
 
-            // Odeslání formuláře RSVP
+            // Odeslání formuláře RSVP + e-mailu pořadateli
             document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const nameInput = document.getElementById('guestName');
                 const noteInput = document.getElementById('guestNote');
                 const nameError = document.getElementById('nameError');
-                const submitBtn = document.getElementById('submitRsvpBtn');
 
                 const nameVal = nameInput.value.trim();
                 if (!nameVal) {
@@ -926,6 +968,7 @@
                 }
                 nameError.classList.add('hidden');
 
+                const wasEditing = Boolean(editingRsvpId);
                 const payload = {
                     name: nameVal,
                     status: selectedStatus,
@@ -934,48 +977,26 @@
                     updatedAt: Date.now()
                 };
 
-                submitBtn.disabled = true;
-                submitBtn.classList.add('opacity-70');
+                // 1. Okamžitě uložíme do localStorage
+                if (wasEditing) {
+                    rsvps = rsvps.map(item => item.id === editingRsvpId ? { ...item, ...payload } : item);
+                } else {
+                    const newId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+                        ? crypto.randomUUID()
+                        : `rsvp_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+                    rsvps.push({ id: newId, createdAt: Date.now(), ...payload });
+                }
 
+                saveRsvpsToStorage();
+                renderGuestStatsAndList();
+
+                // 2. Odešleme e-mail pořadateli přes FormSubmit.co AJAX API
+                setSubmitLoadingState(true);
                 try {
-                    if (isOfflineFallback) {
-                        if (editingRsvpId) {
-                            rsvps = rsvps.map(item => item.id === editingRsvpId ? { ...item, ...payload } : item);
-                            showToast('Odpověď byla upravena! ✨', 'gold');
-                        } else {
-                            rsvps.push({ id: crypto.randomUUID(), createdAt: Date.now(), ...payload });
-                            showToast('Díky! Tvá odpověď byla uložena. 🎉', 'success');
-                        }
-                        renderGuestStatsAndList();
-                        resetRsvpForm();
-                    } else {
-                        if (!currentUser) return;
-                        const rsvpsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'rsvps');
-
-                        if (editingRsvpId) {
-                            const targetDoc = doc(db, 'artifacts', appId, 'public', 'data', 'rsvps', editingRsvpId);
-                            await updateDoc(targetDoc, payload);
-                            showToast('Změny v odpovědi byly uloženy! ✨', 'gold');
-                        } else {
-                            await addDoc(rsvpsColRef, {
-                                ...payload,
-                                createdAt: Date.now()
-                            });
-                            const msg = selectedStatus === 'going'
-                                ? 'Super, počítáme s tebou! 🎉'
-                                : selectedStatus === 'maybe'
-                                    ? 'Zapsáno! Snad to klapne. 🤔'
-                                    : 'Díky za zprávu, budeme se těšit příště! 🥂';
-                            showToast(msg, 'success');
-                        }
-                        resetRsvpForm();
-                    }
-                } catch (err) {
-                    console.error('Chyba při ukládání RSVP:', err);
-                    showToast('Nepodařilo se uložit odpověď. Zkus to prosím znovu.', 'error');
+                    await sendEmailNotification(payload, wasEditing);
                 } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('opacity-70');
+                    setSubmitLoadingState(false);
+                    resetRsvpForm();
                 }
             });
 
@@ -1028,28 +1049,18 @@
                 if (e.target.id === 'deleteModal') closeDeleteModal();
             });
 
-            document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+            document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
                 if (!pendingDeleteId) return;
                 const idToDelete = pendingDeleteId;
                 closeDeleteModal();
 
-                try {
-                    if (isOfflineFallback) {
-                        rsvps = rsvps.filter(r => r.id !== idToDelete);
-                        renderGuestStatsAndList();
-                        showToast('Záznam byl odstraněn.', 'gold');
-                    } else {
-                        if (!currentUser) return;
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'rsvps', idToDelete);
-                        await deleteDoc(docRef);
-                        showToast('Záznam byl odstraněn ze seznamu.', 'gold');
-                    }
-                    if (editingRsvpId === idToDelete) {
-                        resetRsvpForm();
-                    }
-                } catch (err) {
-                    console.error('Chyba při mazání záznamu:', err);
-                    showToast('Záznam se nepodařilo smazat.', 'error');
+                rsvps = rsvps.filter(r => r.id !== idToDelete);
+                saveRsvpsToStorage();
+                renderGuestStatsAndList();
+                showToast('Záznam byl odstraněn.', 'gold');
+
+                if (editingRsvpId === idToDelete) {
+                    resetRsvpForm();
                 }
             });
 
@@ -1076,50 +1087,34 @@
                 if (e.target.id === 'eventModal') closeEventModal();
             });
 
-            document.getElementById('eventDetailsForm').addEventListener('submit', async (e) => {
+            document.getElementById('eventDetailsForm').addEventListener('submit', (e) => {
                 e.preventDefault();
 
-                const updatedDetails = {
+                eventDetails = {
                     timeText: document.getElementById('inputTime').value.trim() || eventDetails.timeText,
                     locationText: document.getElementById('inputLocation').value.trim() || eventDetails.locationText,
                     dressCodeText: document.getElementById('inputDressCode').value.trim() || eventDetails.dressCodeText,
-                    hostNote: document.getElementById('inputHostNote').value.trim(),
-                    updatedAt: Date.now()
+                    hostNote: document.getElementById('inputHostNote').value.trim()
                 };
 
-                const saveBtn = document.getElementById('saveEventBtn');
-                saveBtn.disabled = true;
-
-                try {
-                    if (isOfflineFallback) {
-                        eventDetails = updatedDetails;
-                        renderEventDetails();
-                        closeEventModal();
-                        showToast('Detaily akce byly aktualizovány! ✨', 'gold');
-                    } else {
-                        if (!currentUser) return;
-                        const eventDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'event_settings', 'main');
-                        await setDoc(eventDocRef, updatedDetails, { merge: true });
-                        closeEventModal();
-                        showToast('Detaily akce byly uloženy pro všechny hosty! ✨', 'gold');
-                    }
-                } catch (err) {
-                    console.error('Chyba při ukládání detailů akce:', err);
-                    showToast('Nepodařilo se uložit změny.', 'error');
-                } finally {
-                    saveBtn.disabled = false;
-                }
+                saveEventDetailsToStorage();
+                renderEventDetails();
+                closeEventModal();
+                showToast('Detaily akce byly uloženy! ✨', 'gold');
             });
         }
 
         // ==========================================
-        // 9. SPUŠTĚNÍ APLIKACE PO NAČTENÍ STRÁNKY
+        // SPUŠTĚNÍ APLIKACE PO NAČTENÍ STRÁNKY
         // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            updateEmailStatusBadge();
+            renderEventDetails();
+            renderGuestStatsAndList();
             initSnowCanvas();
             startCountdown();
             bindEvents();
-            initFirebaseAndListeners();
         });
     </script>
 </body>
