@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="cs" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pozvánka na večírek • Pátek 18. 12. 2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display pro slavnostní nadpisy & Inter pro přehledné UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        midnight: '#06131c',
+                        emeraldDeep: '#0a2328',
+                        goldLight: '#fde68a',
+                        goldPrimary: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#051018] via-[#092126] to-[#06151c] text-slate-100 font-sans antialiased selection:bg-amber-400/30 selection:text-amber-200 overflow-x-hidden relative">
+
+    <!-- Jemné ambientní světelné odlesky na pozadí -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/4 -right-24 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-1/3 w-[32rem] h-72 bg-teal-500/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Responzivní plátno pro padající sníh a teplá světýlka -->
+    <canvas id="snowCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Hlavní kontejner aplikace -->
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
+
+        <!-- Horní akční lišta (stav připojení + sdílení) -->
+        <header class="flex flex-wrap items-center justify-between gap-3">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/70 border border-amber-300/20 backdrop-blur-md text-xs sm:text-sm text-amber-200/90 shadow-lg">
+                <span id="connectionDot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span id="connectionText">Připojování k seznamu hostů...</span>
+            </div>
+
+            <button id="shareBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800/90 active:scale-[0.98] border border-amber-300/30 text-amber-200 text-sm font-medium transition-all shadow-lg shadow-black/25 backdrop-blur-md cursor-pointer">
+                <!-- Ikona sdílení -->
+                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                </svg>
+                <span>Sdílet pozvánku</span>
+            </button>
+        </header>
+
+        <!-- Hero sekce s nadpisem, datem a živým odpočtem -->
+        <section class="text-center space-y-6 pt-2 pb-2">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs sm:text-sm font-medium tracking-wide uppercase">
+                <span>✨ Předvánoční setkání přátel ✨</span>
+            </div>
+
+            <div class="space-y-3">
+                <h1 class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-100 via-amber-300 to-yellow-200 drop-shadow-sm">
+                    Pozvánka na večírek
+                </h1>
+                <p class="text-lg sm:text-2xl font-medium text-emerald-200/90 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Pátek 18. prosince 2026</span>
+                </p>
+            </div>
+
+            <!-- Živý odpočet do 18. 12. 2026 v 19:00 -->
+            <div class="max-w-xl mx-auto pt-2">
+                <p id="countdownLabel" class="text-xs uppercase tracking-widest text-slate-400 mb-3">Do začátku večírku zbývá</p>
+                <div class="grid grid-cols-4 gap-2.5 sm:gap-4">
+                    <div class="bg-slate-900/70 backdrop-blur-md border border-amber-300/20 rounded-2xl p-3 sm:p-4 shadow-xl">
+                        <div id="cdDays" class="text-2xl sm:text-4xl font-bold text-amber-300 tabular-nums">--</div>
+                        <div id="cdDaysLabel" class="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider mt-1">Dnů</div>
+                    </div>
+                    <div class="bg-slate-900/70 backdrop-blur-md border border-amber-300/20 rounded-2xl p-3 sm:p-4 shadow-xl">
+                        <div id="cdHours" class="text-2xl sm:text-4xl font-bold text-amber-300 tabular-nums">--</div>
+                        <div id="cdHoursLabel" class="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider mt-1">Hodin</div>
+                    </div>
+                    <div class="bg-slate-900/70 backdrop-blur-md border border-amber-300/20 rounded-2xl p-3 sm:p-4 shadow-xl">
+                        <div id="cdMinutes" class="text-2xl sm:text-4xl font-bold text-amber-300 tabular-nums">--</div>
+                        <div id="cdMinutesLabel" class="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider mt-1">Minut</div>
+                    </div>
+                    <div class="bg-slate-900/70 backdrop-blur-md border border-amber-300/20 rounded-2xl p-3 sm:p-4 shadow-xl">
+                        <div id="cdSeconds" class="text-2xl sm:text-4xl font-bold text-emerald-300 tabular-nums">--</div>
+                        <div id="cdSecondsLabel" class="text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider mt-1">Sekund</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Karta s detaily akce -->
+        <section class="bg-slate-900/70 backdrop-blur-xl border border-amber-200/20 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/40 space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-700/60 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center text-amber-300 text-lg">
+                        🥂
+                    </div>
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-semibold text-white">Informace o večírku</h2>
+                        <p class="text-xs sm:text-sm text-slate-400">Vše důležité na jednom místě</p>
+                    </div>
+                </div>
+
+                <button id="editEventBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 active:scale-[0.98] border border-slate-600/70 text-slate-200 text-sm font-medium transition-all cursor-pointer">
+                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    <span>Upravit detaily akce</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+                <!-- Čas začátku -->
+                <div class="bg-slate-950/50 border border-slate-800/90 rounded-2xl p-4 space-y-1.5">
+                    <div class="flex items-center gap-2 text-amber-300 text-xs font-semibold uppercase tracking-wider">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Čas začátku</span>
+                    </div>
+                    <p id="displayTime" class="text-base font-medium text-slate-100">19:00 (příchod od 18:30)</p>
+                </div>
+
+                <!-- Místo konání -->
+                <div class="bg-slate-950/50 border border-slate-800/90 rounded-2xl p-4 space-y-1.5">
+                    <div class="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span>Místo konání</span>
+                    </div>
+                    <p id="displayLocation" class="text-base font-medium text-slate-100">Zimní zahrada & Klubovna, Praha</p>
+                </div>
+
+                <!-- Dress code -->
+                <div class="bg-slate-950/50 border border-slate-800/90 rounded-2xl p-4 space-y-1.5">
+                    <div class="flex items-center gap-2 text-amber-300 text-xs font-semibold uppercase tracking-wider">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                        </svg>
+                        <span>Dress code</span>
+                    </div>
+                    <p id="displayDressCode" class="text-base font-medium text-slate-100">Smart Casual / Slavnostní zimní outfit</p>
+                </div>
+            </div>
+
+            <!-- Poznámka pořadatele -->
+            <div class="bg-gradient-to-r from-emerald-950/60 to-slate-950/60 border border-emerald-500/20 rounded-2xl p-4 sm:p-5 flex items-start gap-3.5">
+                <span class="text-xl shrink-0 mt-0.5">🎄</span>
+                <div class="space-y-1">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-300">Zpráva od pořadatele</h3>
+                    <p id="displayHostNote" class="text-sm sm:text-base text-slate-200 leading-relaxed">
+                        Těším se na společný předvánoční večer plný dobrého pití, hudby a pohody! Dejte prosím vědět včas, ať vím, kolik občerstvení a přípitků připravit.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulář pro potvrzení účasti (RSVP) -->
+        <section id="rsvpSection" class="bg-slate-900/75 backdrop-blur-xl border border-amber-300/25 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/40">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                <div>
+                    <h2 id="formHeading" class="text-xl sm:text-2xl font-serif font-bold text-amber-200">Potvrdit účast</h2>
+                    <p id="formSubheading" class="text-sm text-slate-400 mt-1">Dej vědět, jestli dorazíš a zda vezmeš doprovod.</p>
+                </div>
+                <button id="cancelEditRsvpBtn" type="button" class="hidden px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 border border-slate-600 transition-all cursor-pointer">
+                    Zrušit úpravu
+                </button>
+            </div>
+
+            <form id="rsvpForm" class="space-y-6" novalidate>
+                <!-- Jméno nebo přezdívka -->
+                <div class="space-y-2">
+                    <label for="guestName" class="block text-sm font-medium text-slate-200">
+                        Tvé jméno nebo přezdívka <span class="text-amber-400">*</span>
+                    </label>
+                    <input type="text" id="guestName" name="guestName" required maxlength="60" placeholder="Např. Petr Novák nebo Péťa"
+                        class="w-full px-4 py-3.5 rounded-2xl bg-slate-950/75 border border-slate-700/90 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25 text-white placeholder-slate-500 outline-none transition-all text-base">
+                    <p id="nameError" class="hidden text-xs text-rose-400 font-medium pt-1">Prosím vyplň své jméno nebo přezdívku.</p>
+                </div>
+
+                <!-- Výběr účasti -->
+                <div class="space-y-2.5">
+                    <span class="block text-sm font-medium text-slate-200">Jak to vidíš s účastí?</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" role="radiogroup" aria-label="Stav účasti">
+                        <button type="button" data-status="going" class="status-btn group flex items-center justify-center gap-2.5 p-4 rounded-2xl border-2 transition-all font-semibold text-base cursor-pointer bg-emerald-500/20 border-emerald-400 text-emerald-200 shadow-lg shadow-emerald-950/40">
+                            <span>Dorazím 🎉</span>
+                        </button>
+                        <button type="button" data-status="maybe" class="status-btn group flex items-center justify-center gap-2.5 p-4 rounded-2xl border-2 transition-all font-semibold text-base cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-amber-400/50 hover:text-amber-200">
+                            <span>Možná 🤔</span>
+                        </button>
+                        <button type="button" data-status="declined" class="status-btn group flex items-center justify-center gap-2.5 p-4 rounded-2xl border-2 transition-all font-semibold text-base cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-rose-400/50 hover:text-rose-200">
+                            <span>Nedoražím 😢</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Výběr počtu osob (skryje se, pokud zvolí Nedoražím) -->
+                <div id="guestsCountWrapper" class="space-y-2.5 transition-all">
+                    <label for="guestsCount" class="block text-sm font-medium text-slate-200">Počet osob celkem (včetně tebe)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <button type="button" data-count="1" class="count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-amber-400/20 border-amber-400 text-amber-200">
+                            Jdu sám/sama (1)
+                        </button>
+                        <button type="button" data-count="2" class="count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-amber-400/40">
+                            +1 doprovod (2)
+                        </button>
+                        <button type="button" data-count="3" class="count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-amber-400/40">
+                            +2 doprovod (3)
+                        </button>
+                        <button type="button" data-count="4" class="count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-amber-400/40">
+                            +3 doprovod (4)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Volitelná poznámka / Co přinesu / Dieta -->
+                <div class="space-y-2">
+                    <label for="guestNote" class="block text-sm font-medium text-slate-200">
+                        Co přinesu / Poznámka / Dieta <span class="text-slate-400 font-normal">(volitelné)</span>
+                    </label>
+                    <textarea id="guestNote" name="guestNote" rows="2" maxlength="200" placeholder="Např. Přinesu láhev rumu a jednohubky, přijdu kolem 20:00, bezlepková dieta..."
+                        class="w-full px-4 py-3 rounded-2xl bg-slate-950/75 border border-slate-700/90 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25 text-white placeholder-slate-500 outline-none transition-all text-sm sm:text-base resize-none"></textarea>
+                </div>
+
+                <!-- Odesílací tlačítko -->
+                <div class="pt-1">
+                    <button id="submitRsvpBtn" type="submit" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-500 hover:brightness-110 active:scale-[0.99] text-slate-950 font-bold text-base sm:text-lg shadow-xl shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                        <span id="submitBtnText">Potvrdit odpověď</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Živý přehled a seznam hostů -->
+        <section class="bg-slate-900/70 backdrop-blur-xl border border-amber-200/20 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/40 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-serif font-bold text-white">Kdo všechno dorazí</h2>
+                    <p class="text-sm text-slate-400">Živý přehled potvrzených hostů a vzkazů</p>
+                </div>
+            </div>
+
+            <!-- Souhrnné statistiky -->
+            <div class="grid grid-cols-3 gap-3 sm:gap-4">
+                <div class="bg-emerald-950/45 border border-emerald-500/30 rounded-2xl p-4 text-center">
+                    <div id="statGoingCount" class="text-2xl sm:text-3xl font-bold text-emerald-300 tabular-nums">0</div>
+                    <div class="text-xs sm:text-sm font-medium text-emerald-200/80 mt-1">Dorazí osob 🎉</div>
+                </div>
+                <div class="bg-amber-950/35 border border-amber-500/30 rounded-2xl p-4 text-center">
+                    <div id="statMaybeCount" class="text-2xl sm:text-3xl font-bold text-amber-300 tabular-nums">0</div>
+                    <div class="text-xs sm:text-sm font-medium text-amber-200/80 mt-1">Možná 🤔</div>
+                </div>
+                <div class="bg-slate-950/60 border border-slate-700/70 rounded-2xl p-4 text-center">
+                    <div id="statDeclinedCount" class="text-2xl sm:text-3xl font-bold text-slate-300 tabular-nums">0</div>
+                    <div class="text-xs sm:text-sm font-medium text-slate-400 mt-1">Omluveno 😢</div>
+                </div>
+            </div>
+
+            <!-- Filtrovací záložky -->
+            <div class="flex flex-wrap items-center gap-2 pt-1" role="tablist" aria-label="Filtrovat hosty podle účasti">
+                <button type="button" data-filter="all" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer bg-amber-400 text-slate-950 shadow-md">
+                    Všichni (<span id="filterCountAll">0</span>)
+                </button>
+                <button type="button" data-filter="going" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/70">
+                    Dorazím 🎉 (<span id="filterCountGoing">0</span>)
+                </button>
+                <button type="button" data-filter="maybe" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/70">
+                    Možná 🤔 (<span id="filterCountMaybe">0</span>)
+                </button>
+                <button type="button" data-filter="declined" class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/70">
+                    Nedoražím 😢 (<span id="filterCountDeclined">0</span>)
+                </button>
+            </div>
+
+            <!-- Seznam odpovědí -->
+            <div id="guestListContainer" class="space-y-3">
+                <!-- Dynamicky generované karty hostů -->
+                <div class="text-center py-10 text-slate-400 text-sm">
+                    Načítám seznam pozvaných...
+                </div>
+            </div>
+        </section>
+
+        <!-- Patička -->
+        <footer class="text-center text-xs text-slate-500 pb-6">
+            Pátek 18. 12. 2026 • Těšíme se na viděnou! ✨
+        </footer>
+    </div>
+
+    <!-- MODAL: Úprava detailů akce -->
+    <div id="eventModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-amber-300/30 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5 relative animate-fadeIn">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <h3 class="text-xl font-serif font-bold text-amber-200">Upravit detaily večírku</h3>
+                <button id="closeEventModalBtn" type="button" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Zavřít">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="eventDetailsForm" class="space-y-4">
+                <div class="space-y-1.5">
+                    <label for="inputTime" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Čas začátku</label>
+                    <input type="text" id="inputTime" required maxlength="80"
+                        class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-amber-400 text-white text-sm outline-none">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label for="inputLocation" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Místo konání</label>
+                    <input type="text" id="inputLocation" required maxlength="120"
+                        class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-amber-400 text-white text-sm outline-none">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label for="inputDressCode" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Dress code</label>
+                    <input type="text" id="inputDressCode" required maxlength="100"
+                        class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-amber-400 text-white text-sm outline-none">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label for="inputHostNote" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Zpráva od pořadatele</label>
+                    <textarea id="inputHostNote" rows="3" maxlength="350"
+                        class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 focus:border-amber-400 text-white text-sm outline-none resize-none"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" id="cancelEventModalBtn" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium transition-colors cursor-pointer">
+                        Zrušit
+                    </button>
+                    <button type="submit" id="saveEventBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 hover:brightness-110 text-slate-950 font-bold text-sm shadow-lg transition-all cursor-pointer">
+                        Uložit změny
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Potvrzení smazání záznamu -->
+    <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-rose-500/30 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5 text-center">
+            <div class="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center mx-auto text-xl">
+                🗑️
+            </div>
+            <div class="space-y-1.5">
+                <h3 class="text-lg font-bold text-white">Smazat odpověď?</h3>
+                <p id="deleteModalText" class="text-sm text-slate-400">Opravdu chceš odstranit tento záznam ze seznamu hostů?</p>
+            </div>
+            <div class="flex items-center justify-center gap-3 pt-1">
+                <button id="cancelDeleteBtn" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium transition-colors cursor-pointer">
+                    Ponechat
+                </button>
+                <button id="confirmDeleteBtn" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold transition-colors cursor-pointer">
+                    Ano, smazat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFIKACE -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 left-5 sm:left-auto z-50 flex flex-col items-center sm:items-end gap-2 pointer-events-none"></div>
+
+    <!-- Aplikační logika a Firebase Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ==========================================
+        // 1. INICIALIZACE STAVU A KONFIGURACE
+        // ==========================================
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+        let isOfflineFallback = false;
+
+        // Výchozí stav dat
+        let rsvps = [];
+        let activeFilter = 'all';
+        let selectedStatus = 'going';
+        let selectedGuestsCount = 1;
+        let editingRsvpId = null;
+        let pendingDeleteId = null;
+
+        let eventDetails = {
+            timeText: '19:00 (příchod od 18:30)',
+            locationText: 'Zimní zahrada & Klubovna, Praha',
+            dressCodeText: 'Smart Casual / Slavnostní zimní outfit',
+            hostNote: 'Těším se na společný předvánoční večer plný dobrého pití, hudby a pohody! Dejte prosím vědět včas, ať vím, kolik občerstvení a přípitků připravit.'
+        };
+
+        // ==========================================
+        // 2. ZIMNÍ ANIMACE SNĚHU A SVĚTÝLEK (CANVAS)
+        // ==========================================
+        function initSnowCanvas() {
+            const canvas = document.getElementById('snowCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // Vytvoření kombinace jemných sněhových vloček a zlatavých jisker
+            const particleCount = Math.min(75, Math.floor((window.innerWidth * window.innerHeight) / 16000));
+            for (let i = 0; i < particleCount; i++) {
+                const isGoldSpark = i % 4 === 0;
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: isGoldSpark ? (Math.random() * 2.2 + 1) : (Math.random() * 2.5 + 0.8),
+                    speedY: isGoldSpark ? (Math.random() * 0.35 + 0.15) : (Math.random() * 0.7 + 0.25),
+                    speedX: (Math.random() - 0.5) * 0.4,
+                    opacity: Math.random() * 0.55 + 0.2,
+                    isGold: isGoldSpark,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+
+            function animateSnow() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (const p of particles) {
+                    p.phase += 0.015;
+                    p.y += p.speedY;
+                    p.x += p.speedX + Math.sin(p.phase) * 0.2;
+
+                    if (p.y > canvas.height + 10) {
+                        p.y = -10;
+                        p.x = Math.random() * canvas.width;
+                    }
+                    if (p.x > canvas.width + 10) p.x = -10;
+                    if (p.x < -10) p.x = canvas.width + 10;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    if (p.isGold) {
+                        const twinkle = 0.65 + 0.35 * Math.sin(p.phase * 2);
+                        ctx.fillStyle = `rgba(251, 191, 36, ${p.opacity * twinkle})`;
+                    } else {
+                        ctx.fillStyle = `rgba(241, 245, 249, ${p.opacity})`;
+                    }
+                    ctx.fill();
+                }
+
+                requestAnimationFrame(animateSnow);
+            }
+
+            animateSnow();
+        }
+
+        // ==========================================
+        // 3. ŽIVÝ ODPOČET DO 18. 12. 2026 V 19:00
+        // ==========================================
+        function startCountdown() {
+            const targetDate = new Date('2026-12-18T19:00:00').getTime();
+
+            function pluralizeCz(num, one, few, many) {
+                if (num === 1) return one;
+                if (num >= 2 && num <= 4) return few;
+                return many;
+            }
+
+            function updateTimer() {
+                const now = Date.now();
+                const diff = targetDate - now;
+
+                const daysEl = document.getElementById('cdDays');
+                const hoursEl = document.getElementById('cdHours');
+                const minsEl = document.getElementById('cdMinutes');
+                const secsEl = document.getElementById('cdSeconds');
+
+                if (diff <= 0) {
+                    document.getElementById('countdownLabel').textContent = 'Večírek právě probíhá! 🥂';
+                    daysEl.textContent = '0';
+                    hoursEl.textContent = '00';
+                    minsEl.textContent = '00';
+                    secsEl.textContent = '00';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / 1000 / 60) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                daysEl.textContent = String(days);
+                hoursEl.textContent = String(hours).padStart(2, '0');
+                minsEl.textContent = String(minutes).padStart(2, '0');
+                secsEl.textContent = String(seconds).padStart(2, '0');
+
+                document.getElementById('cdDaysLabel').textContent = pluralizeCz(days, 'Den', 'Dny', 'Dnů');
+                document.getElementById('cdHoursLabel').textContent = pluralizeCz(hours, 'Hodina', 'Hodiny', 'Hodin');
+                document.getElementById('cdMinutesLabel').textContent = pluralizeCz(minutes, 'Minuta', 'Minuty', 'Minut');
+                document.getElementById('cdSecondsLabel').textContent = pluralizeCz(seconds, 'Sekunda', 'Sekundy', 'Sekund');
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        // ==========================================
+        // 4. TOAST NOTIFIKACE A POMOCNÉ FUNKCE
+        // ==========================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+
+            const styles = {
+                success: 'bg-emerald-950/95 border-emerald-400/50 text-emerald-100',
+                gold: 'bg-slate-900/95 border-amber-400/60 text-amber-100',
+                error: 'bg-rose-950/95 border-rose-400/50 text-rose-100'
+            };
+
+            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-2xl backdrop-blur-md text-sm font-medium transition-all duration-300 translate-y-2 opacity-0 ${styles[type] || styles.gold}`;
+            toast.textContent = message;
+
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3400);
+        }
+
+        // Bezpečné escapování HTML proti XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // Sdílení pozvánky (zkopírování URL pomocí document.execCommand('copy'))
+        function handleShareInvite() {
+            const shareUrl = window.location.href;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = shareUrl;
+            tempInput.setAttribute('readonly', '');
+            tempInput.style.position = 'fixed';
+            tempInput.style.opacity = '0';
+            document.body.appendChild(tempInput);
+            tempInput.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast('Odkaz na pozvánku byl zkopírován do schránky! ✨', 'gold');
+                } else {
+                    showToast('Odkaz se nepodařilo zkopírovat automaticky.', 'error');
+                }
+            } catch (err) {
+                showToast('Odkaz se nepodařilo zkopírovat.', 'error');
+            } finally {
+                document.body.removeChild(tempInput);
+            }
+        }
+
+        // ==========================================
+        // 5. VYKRESLOVÁNÍ UI (DETAILY AKCE A HOSTÉ)
+        // ==========================================
+        function renderEventDetails() {
+            document.getElementById('displayTime').textContent = eventDetails.timeText;
+            document.getElementById('displayLocation').textContent = eventDetails.locationText;
+            document.getElementById('displayDressCode').textContent = eventDetails.dressCodeText;
+            document.getElementById('displayHostNote').textContent = eventDetails.hostNote;
+        }
+
+        function renderGuestStatsAndList() {
+            // Výpočet statistik
+            const goingEntries = rsvps.filter(r => r.status === 'going');
+            const maybeEntries = rsvps.filter(r => r.status === 'maybe');
+            const declinedEntries = rsvps.filter(r => r.status === 'declined');
+
+            const totalGoingPeople = goingEntries.reduce((sum, item) => sum + (Number(item.guestsCount) || 1), 0);
+            const totalMaybeEntries = maybeEntries.length;
+            const totalDeclinedEntries = declinedEntries.length;
+
+            document.getElementById('statGoingCount').textContent = totalGoingPeople;
+            document.getElementById('statMaybeCount').textContent = totalMaybeEntries;
+            document.getElementById('statDeclinedCount').textContent = totalDeclinedEntries;
+
+            document.getElementById('filterCountAll').textContent = rsvps.length;
+            document.getElementById('filterCountGoing').textContent = goingEntries.length;
+            document.getElementById('filterCountMaybe').textContent = maybeEntries.length;
+            document.getElementById('filterCountDeclined').textContent = declinedEntries.length;
+
+            // Filtrování a seřazení v paměti (nejnovější úpravy nahoře)
+            const filtered = rsvps
+                .filter(item => activeFilter === 'all' ? true : item.status === activeFilter)
+                .sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
+
+            const container = document.getElementById('guestListContainer');
+
+            if (filtered.length === 0) {
+                const emptyMessages = {
+                    all: 'Zatím tu nejsou žádné odpovědi. Buď první, kdo potvrdí účast! 🎉',
+                    going: 'Zatím nikdo nepotvrdil účast v této kategorii.',
+                    maybe: 'Zatím tu není žádná odpověď „Možná“.',
+                    declined: 'Zatím se nikdo neomluvil — skvělá zpráva!'
+                };
+                container.innerHTML = `
+                    <div class="text-center py-10 px-4 rounded-2xl bg-slate-950/40 border border-dashed border-slate-800 text-slate-400 text-sm">
+                        ${emptyMessages[activeFilter]}
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(guest => {
+                const statusConfig = {
+                    going: {
+                        badge: 'Dorazím 🎉',
+                        badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30',
+                        avatarClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40'
+                    },
+                    maybe: {
+                        badge: 'Možná 🤔',
+                        badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-400/30',
+                        avatarClass: 'bg-amber-500/20 text-amber-300 border-amber-400/40'
+                    },
+                    declined: {
+                        badge: 'Nedoražím 😢',
+                        badgeClass: 'bg-rose-500/15 text-rose-300 border-rose-400/25',
+                        avatarClass: 'bg-slate-800 text-slate-400 border-slate-700'
+                    }
+                };
+
+                const cfg = statusConfig[guest.status] || statusConfig.going;
+                const initial = escapeHtml((guest.name || '?').trim().charAt(0).toUpperCase());
+                const count = Number(guest.guestsCount) || 1;
+
+                let companionText = '';
+                if (guest.status !== 'declined') {
+                    if (count === 1) {
+                        companionText = '1 osoba';
+                    } else {
+                        companionText = `${count} osoby (+${count - 1} doprovod)`;
+                    }
+                }
+
+                return `
+                    <div class="group bg-slate-950/60 hover:bg-slate-950/85 border border-slate-800/90 hover:border-amber-300/25 rounded-2xl p-4 sm:p-5 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-3.5 min-w-0">
+                            <div class="w-11 h-11 rounded-2xl border flex items-center justify-center font-bold text-base shrink-0 ${cfg.avatarClass}">
+                                ${initial}
+                            </div>
+                            <div class="space-y-1.5 min-w-0 flex-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 class="font-semibold text-base text-white truncate max-w-full">${escapeHtml(guest.name)}</h3>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${cfg.badgeClass}">
+                                        ${cfg.badge}
+                                    </span>
+                                    ${companionText ? `
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800/90 text-slate-300 border border-slate-700/80">
+                                            👥 ${companionText}
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                ${guest.note ? `
+                                    <p class="text-sm text-slate-300/90 bg-slate-900/80 border border-slate-800/80 rounded-xl px-3 py-2 inline-block max-w-full break-words">
+                                        <span class="text-amber-300/90 font-medium">🎁 Poznámka:</span> ${escapeHtml(guest.note)}
+                                    </p>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Akční tlačítka pro úpravu nebo smazání záznamu -->
+                        <div class="flex items-center justify-end gap-2 shrink-0 border-t sm:border-t-0 border-slate-800/70 pt-3 sm:pt-0">
+                            <button type="button" data-action="edit" data-id="${escapeHtml(guest.id)}" title="Upravit odpověď"
+                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-medium text-slate-300 hover:text-amber-200 transition-colors cursor-pointer">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                </svg>
+                                <span>Upravit</span>
+                            </button>
+                            <button type="button" data-action="delete" data-id="${escapeHtml(guest.id)}" title="Smazat odpověď"
+                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-950/70 border border-slate-700/80 hover:border-rose-500/40 text-xs font-medium text-slate-400 hover:text-rose-300 transition-colors cursor-pointer">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                <span>Smazat</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // 6. INTERAKCE FORMULÁŘE A MODÁLNÍCH OKEN
+        // ==========================================
+        function updateStatusButtonsUI() {
+            document.querySelectorAll('.status-btn').forEach(btn => {
+                const status = btn.dataset.status;
+                btn.className = 'status-btn group flex items-center justify-center gap-2.5 p-4 rounded-2xl border-2 transition-all font-semibold text-base cursor-pointer ';
+
+                if (status === selectedStatus) {
+                    if (status === 'going') {
+                        btn.className += 'bg-emerald-500/20 border-emerald-400 text-emerald-200 shadow-lg shadow-emerald-950/40';
+                    } else if (status === 'maybe') {
+                        btn.className += 'bg-amber-500/20 border-amber-400 text-amber-200 shadow-lg shadow-amber-950/40';
+                    } else {
+                        btn.className += 'bg-rose-500/20 border-rose-400 text-rose-200 shadow-lg shadow-rose-950/40';
+                    }
+                } else {
+                    btn.className += 'bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-slate-500';
+                }
+            });
+
+            // Skrýt výběr počtu osob, pokud uživatel zvolil Nedoražím
+            const guestsWrapper = document.getElementById('guestsCountWrapper');
+            if (selectedStatus === 'declined') {
+                guestsWrapper.classList.add('hidden');
+            } else {
+                guestsWrapper.classList.remove('hidden');
+            }
+        }
+
+        function updateCountButtonsUI() {
+            document.querySelectorAll('.count-btn').forEach(btn => {
+                const count = Number(btn.dataset.count);
+                if (count === selectedGuestsCount) {
+                    btn.className = 'count-btn p-3 rounded-xl border text-sm font-semibold transition-all cursor-pointer bg-amber-400/20 border-amber-400 text-amber-200 shadow-md';
+                } else {
+                    btn.className = 'count-btn p-3 rounded-xl border text-sm font-medium transition-all cursor-pointer bg-slate-950/60 border-slate-700/80 text-slate-300 hover:border-amber-400/40';
+                }
+            });
+        }
+
+        function resetRsvpForm() {
+            editingRsvpId = null;
+            document.getElementById('guestName').value = '';
+            document.getElementById('guestNote').value = '';
+            document.getElementById('nameError').classList.add('hidden');
+            selectedStatus = 'going';
+            selectedGuestsCount = 1;
+            updateStatusButtonsUI();
+            updateCountButtonsUI();
+
+            document.getElementById('formHeading').textContent = 'Potvrdit účast';
+            document.getElementById('formSubheading').textContent = 'Dej vědět, jestli dorazíš a zda vezmeš doprovod.';
+            document.getElementById('submitBtnText').textContent = 'Potvrdit odpověď';
+            document.getElementById('cancelEditRsvpBtn').classList.add('hidden');
+        }
+
+        function startEditRsvp(id) {
+            const guest = rsvps.find(r => r.id === id);
+            if (!guest) return;
+
+            editingRsvpId = id;
+            document.getElementById('guestName').value = guest.name || '';
+            document.getElementById('guestNote').value = guest.note || '';
+            document.getElementById('nameError').classList.add('hidden');
+
+            selectedStatus = guest.status || 'going';
+            selectedGuestsCount = Number(guest.guestsCount) > 0 ? Number(guest.guestsCount) : 1;
+
+            updateStatusButtonsUI();
+            updateCountButtonsUI();
+
+            document.getElementById('formHeading').textContent = `Úprava odpovědi: ${guest.name}`;
+            document.getElementById('formSubheading').textContent = 'Změň svou účast, počet osob nebo poznámku a ulož.';
+            document.getElementById('submitBtnText').textContent = 'Uložit změny odpovědi';
+            document.getElementById('cancelEditRsvpBtn').classList.remove('hidden');
+
+            document.getElementById('rsvpSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // ==========================================
+        // 7. FIREBASE AUTH & FIRESTORE REALTIME SYNC
+        // ==========================================
+        async function initFirebaseAndListeners() {
+            const dot = document.getElementById('connectionDot');
+            const statusText = document.getElementById('connectionText');
+
+            if (!firebaseConfig) {
+                isOfflineFallback = true;
+                dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                statusText.textContent = 'Lokální režim (náhled)';
+                renderEventDetails();
+                renderGuestStatsAndList();
+                return;
+            }
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // POVINNÉ PRAVIDLO 3: Nejprve autentizace před jakýmkoliv dotazem do Firestore
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    const cred = await signInWithCustomToken(auth, __initial_auth_token);
+                    currentUser = cred.user;
+                } else {
+                    const cred = await signInAnonymously(auth);
+                    currentUser = cred.user;
+                }
+
+                dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                statusText.textContent = 'Živě propojeno se seznamem hostů';
+
+                // POVINNÉ PRAVIDLO 1: Striktní cesta /artifacts/{appId}/public/data/{collectionName}
+                const eventDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'event_settings', 'main');
+                onSnapshot(
+                    eventDocRef,
+                    (snapshot) => {
+                        if (snapshot.exists()) {
+                            const data = snapshot.data();
+                            eventDetails = {
+                                timeText: data.timeText || eventDetails.timeText,
+                                locationText: data.locationText || eventDetails.locationText,
+                                dressCodeText: data.dressCodeText || eventDetails.dressCodeText,
+                                hostNote: data.hostNote !== undefined ? data.hostNote : eventDetails.hostNote
+                            };
+                        }
+                        renderEventDetails();
+                    },
+                    (error) => {
+                        console.error('Chyba při načítání detailů akce:', error);
+                        renderEventDetails();
+                    }
+                );
+
+                // POVINNÉ PRAVIDLO 1 & 2: Jednoduchý dotaz na kolekci bez orderBy/where/limit
+                const rsvpsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'rsvps');
+                onSnapshot(
+                    rsvpsColRef,
+                    (snapshot) => {
+                        rsvps = snapshot.docs.map(docSnap => ({
+                            id: docSnap.id,
+                            ...docSnap.data()
+                        }));
+                        renderGuestStatsAndList();
+                    },
+                    (error) => {
+                        console.error('Chyba při načítání seznamu hostů:', error);
+                        showToast('Nepodařilo se načíst aktuální seznam hostů.', 'error');
+                    }
+                );
+            } catch (err) {
+                console.error('Chyba inicializace Firebase:', err);
+                isOfflineFallback = true;
+                dot.className = 'w-2 h-2 rounded-full bg-rose-400';
+                statusText.textContent = 'Režim bez připojení k databázi';
+                renderEventDetails();
+                renderGuestStatsAndList();
+            }
+        }
+
+        // ==========================================
+        // 8. OVLÁDACÍ PRVKY A EVENT LISTENERY
+        // ==========================================
+        function bindEvents() {
+            // Sdílet pozvánku
+            document.getElementById('shareBtn').addEventListener('click', handleShareInvite);
+
+            // Výběr stavu účasti (Dorazím / Možná / Nedoražím)
+            document.querySelectorAll('.status-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectedStatus = btn.dataset.status;
+                    updateStatusButtonsUI();
+                });
+            });
+
+            // Výběr počtu osob
+            document.querySelectorAll('.count-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectedGuestsCount = Number(btn.dataset.count);
+                    updateCountButtonsUI();
+                });
+            });
+
+            // Zrušit úpravu RSVP
+            document.getElementById('cancelEditRsvpBtn').addEventListener('click', resetRsvpForm);
+
+            // Odeslání formuláře RSVP
+            document.getElementById('rsvpForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const nameInput = document.getElementById('guestName');
+                const noteInput = document.getElementById('guestNote');
+                const nameError = document.getElementById('nameError');
+                const submitBtn = document.getElementById('submitRsvpBtn');
+
+                const nameVal = nameInput.value.trim();
+                if (!nameVal) {
+                    nameError.classList.remove('hidden');
+                    nameInput.focus();
+                    return;
+                }
+                nameError.classList.add('hidden');
+
+                const payload = {
+                    name: nameVal,
+                    status: selectedStatus,
+                    guestsCount: selectedStatus === 'declined' ? 0 : selectedGuestsCount,
+                    note: noteInput.value.trim(),
+                    updatedAt: Date.now()
+                };
+
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-70');
+
+                try {
+                    if (isOfflineFallback) {
+                        if (editingRsvpId) {
+                            rsvps = rsvps.map(item => item.id === editingRsvpId ? { ...item, ...payload } : item);
+                            showToast('Odpověď byla upravena! ✨', 'gold');
+                        } else {
+                            rsvps.push({ id: crypto.randomUUID(), createdAt: Date.now(), ...payload });
+                            showToast('Díky! Tvá odpověď byla uložena. 🎉', 'success');
+                        }
+                        renderGuestStatsAndList();
+                        resetRsvpForm();
+                    } else {
+                        if (!currentUser) return;
+                        const rsvpsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'rsvps');
+
+                        if (editingRsvpId) {
+                            const targetDoc = doc(db, 'artifacts', appId, 'public', 'data', 'rsvps', editingRsvpId);
+                            await updateDoc(targetDoc, payload);
+                            showToast('Změny v odpovědi byly uloženy! ✨', 'gold');
+                        } else {
+                            await addDoc(rsvpsColRef, {
+                                ...payload,
+                                createdAt: Date.now()
+                            });
+                            const msg = selectedStatus === 'going'
+                                ? 'Super, počítáme s tebou! 🎉'
+                                : selectedStatus === 'maybe'
+                                    ? 'Zapsáno! Snad to klapne. 🤔'
+                                    : 'Díky za zprávu, budeme se těšit příště! 🥂';
+                            showToast(msg, 'success');
+                        }
+                        resetRsvpForm();
+                    }
+                } catch (err) {
+                    console.error('Chyba při ukládání RSVP:', err);
+                    showToast('Nepodařilo se uložit odpověď. Zkus to prosím znovu.', 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-70');
+                }
+            });
+
+            // Filtrovací záložky
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeFilter = btn.dataset.filter;
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        if (b.dataset.filter === activeFilter) {
+                            b.className = 'filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer bg-amber-400 text-slate-950 shadow-md';
+                        } else {
+                            b.className = 'filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer bg-slate-800/80 text-slate-300 hover:bg-slate-800 border border-slate-700/70';
+                        }
+                    });
+                    renderGuestStatsAndList();
+                });
+            });
+
+            // Delegace kliknutí na Upravit / Smazat v seznamu hostů
+            document.getElementById('guestListContainer').addEventListener('click', (e) => {
+                const actionBtn = e.target.closest('button[data-action]');
+                if (!actionBtn) return;
+
+                const action = actionBtn.dataset.action;
+                const id = actionBtn.dataset.id;
+
+                if (action === 'edit') {
+                    startEditRsvp(id);
+                } else if (action === 'delete') {
+                    const guest = rsvps.find(r => r.id === id);
+                    if (!guest) return;
+                    pendingDeleteId = id;
+                    document.getElementById('deleteModalText').textContent = `Opravdu chceš odstranit odpověď od „${guest.name}“?`;
+                    const delModal = document.getElementById('deleteModal');
+                    delModal.classList.remove('hidden');
+                    delModal.classList.add('flex');
+                }
+            });
+
+            // Modal: Potvrzení smazání
+            const closeDeleteModal = () => {
+                pendingDeleteId = null;
+                const delModal = document.getElementById('deleteModal');
+                delModal.classList.add('hidden');
+                delModal.classList.remove('flex');
+            };
+
+            document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+            document.getElementById('deleteModal').addEventListener('click', (e) => {
+                if (e.target.id === 'deleteModal') closeDeleteModal();
+            });
+
+            document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+                if (!pendingDeleteId) return;
+                const idToDelete = pendingDeleteId;
+                closeDeleteModal();
+
+                try {
+                    if (isOfflineFallback) {
+                        rsvps = rsvps.filter(r => r.id !== idToDelete);
+                        renderGuestStatsAndList();
+                        showToast('Záznam byl odstraněn.', 'gold');
+                    } else {
+                        if (!currentUser) return;
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'rsvps', idToDelete);
+                        await deleteDoc(docRef);
+                        showToast('Záznam byl odstraněn ze seznamu.', 'gold');
+                    }
+                    if (editingRsvpId === idToDelete) {
+                        resetRsvpForm();
+                    }
+                } catch (err) {
+                    console.error('Chyba při mazání záznamu:', err);
+                    showToast('Záznam se nepodařilo smazat.', 'error');
+                }
+            });
+
+            // Modal: Úprava detailů akce
+            const eventModal = document.getElementById('eventModal');
+            const openEventModal = () => {
+                document.getElementById('inputTime').value = eventDetails.timeText;
+                document.getElementById('inputLocation').value = eventDetails.locationText;
+                document.getElementById('inputDressCode').value = eventDetails.dressCodeText;
+                document.getElementById('inputHostNote').value = eventDetails.hostNote;
+                eventModal.classList.remove('hidden');
+                eventModal.classList.add('flex');
+            };
+
+            const closeEventModal = () => {
+                eventModal.classList.add('hidden');
+                eventModal.classList.remove('flex');
+            };
+
+            document.getElementById('editEventBtn').addEventListener('click', openEventModal);
+            document.getElementById('closeEventModalBtn').addEventListener('click', closeEventModal);
+            document.getElementById('cancelEventModalBtn').addEventListener('click', closeEventModal);
+            eventModal.addEventListener('click', (e) => {
+                if (e.target.id === 'eventModal') closeEventModal();
+            });
+
+            document.getElementById('eventDetailsForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const updatedDetails = {
+                    timeText: document.getElementById('inputTime').value.trim() || eventDetails.timeText,
+                    locationText: document.getElementById('inputLocation').value.trim() || eventDetails.locationText,
+                    dressCodeText: document.getElementById('inputDressCode').value.trim() || eventDetails.dressCodeText,
+                    hostNote: document.getElementById('inputHostNote').value.trim(),
+                    updatedAt: Date.now()
+                };
+
+                const saveBtn = document.getElementById('saveEventBtn');
+                saveBtn.disabled = true;
+
+                try {
+                    if (isOfflineFallback) {
+                        eventDetails = updatedDetails;
+                        renderEventDetails();
+                        closeEventModal();
+                        showToast('Detaily akce byly aktualizovány! ✨', 'gold');
+                    } else {
+                        if (!currentUser) return;
+                        const eventDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'event_settings', 'main');
+                        await setDoc(eventDocRef, updatedDetails, { merge: true });
+                        closeEventModal();
+                        showToast('Detaily akce byly uloženy pro všechny hosty! ✨', 'gold');
+                    }
+                } catch (err) {
+                    console.error('Chyba při ukládání detailů akce:', err);
+                    showToast('Nepodařilo se uložit změny.', 'error');
+                } finally {
+                    saveBtn.disabled = false;
+                }
+            });
+        }
+
+        // ==========================================
+        // 9. SPUŠTĚNÍ APLIKACE PO NAČTENÍ STRÁNKY
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            initSnowCanvas();
+            startCountdown();
+            bindEvents();
+            initFirebaseAndListeners();
+        });
+    </script>
+</body>
+</html>
